@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+*.db
+*.db-journal
+*.log
+*.tsbuildinfo
+*.msi
+*.exe
+*.zip
+node-v*/
+github-upload/
+client/vite.config.js
+client/vite.config.d.ts
+.DS_Store
