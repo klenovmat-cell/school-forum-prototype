@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Sparkles,
   Trophy,
+  X,
   UserPlus
 } from "lucide-react";
 import { api } from "./api";
@@ -202,7 +203,7 @@ function App() {
         </button>
       )}
 
-      <main className="layout">
+      <main className={selectedPost ? "layout has-detail" : "layout"}>
         <aside className="sidebar">
           <div className="sidebar-head">
             <span>Разделы</span>
@@ -292,6 +293,7 @@ function App() {
               signedIn={Boolean(user)}
               isModerator={isModerator}
               onLike={() => toggleLike(selectedPost)}
+              onClose={() => setSelectedPostId(null)}
               onComment={async (content, parentId) => {
                 const comment = await api.comment(selectedPost.id, { content, parentId });
                 setSelectedPost({
@@ -437,6 +439,7 @@ function PostDetail({
   signedIn,
   isModerator,
   onLike,
+  onClose,
   onComment,
   onModerateComment,
   onMessage
@@ -445,6 +448,7 @@ function PostDetail({
   signedIn: boolean;
   isModerator: boolean;
   onLike: () => void;
+  onClose: () => void;
   onComment: (content: string, parentId?: number | null) => Promise<void>;
   onModerateComment: (comment: Comment, status: ContentStatus) => void;
   onMessage: (message: string) => void;
@@ -471,9 +475,14 @@ function PostDetail({
 
   return (
     <div className="detail-card">
-      <div className="post-meta">
-        <span>{post.category.title}</span>
-        <span>{post.author.nickname}</span>
+      <div className="detail-top">
+        <div className="post-meta">
+          <span>{post.category.title}</span>
+          <span>{post.author.nickname}</span>
+        </div>
+        <button className="icon-button" type="button" onClick={onClose} title="Закрыть">
+          <X size={18} />
+        </button>
       </div>
       <h2>{post.title}</h2>
       {post.mediaUrl && (
