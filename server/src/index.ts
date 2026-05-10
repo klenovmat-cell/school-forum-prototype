@@ -11,6 +11,8 @@ import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
+process.env.DATABASE_URL ??= "file:./dev.db";
+
 const prisma = new PrismaClient();
 const app = express();
 const port = Number(process.env.PORT ?? 4000);

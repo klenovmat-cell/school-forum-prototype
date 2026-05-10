@@ -2,6 +2,9 @@
   "name": "school-forum-prototype",
   "private": true,
   "version": "0.1.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "workspaces": [
     "client",
     "server"
@@ -14,6 +17,7 @@
     "db:generate": "prisma generate --schema prisma/schema.prisma",
     "db:push": "node prisma/init_sqlite.mjs",
     "db:seed": "tsx prisma/seed.ts",
+    "render:start": "npm run db:push && npm run db:seed && npm run start -w server",
     "setup": "npm install && npm run db:generate && npm run db:push && npm run db:seed"
   },
   "devDependencies": {
