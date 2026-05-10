@@ -1,5 +1,7 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
@@ -15,6 +17,9 @@ const port = Number(process.env.PORT ?? 4000);
 const clientOrigin = process.env.CLIENT_ORIGIN ?? "http://localhost:5173";
 const jwtSecret = process.env.JWT_SECRET ?? "dev-secret-change-me";
 const isProduction = process.env.NODE_ENV === "production";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const clientDistPath = path.resolve(__dirname, "../../client/dist");
 const UserRole = { USER: "USER", MODERATOR: "MODERATOR" } as const;
 const ContentStatus = { ACTIVE: "ACTIVE", HIDDEN: "HIDDEN" } as const;
 
@@ -451,6 +456,16 @@ app.patch("/api/moderation/comments/:id", requireModerator, async (request, resp
   } catch (error) {
     next(error);
   }
+});
+
+app.use("/api", (_request, response) => {
+  response.status(404).json({ message: "API route not found." });
+});
+
+app.use(express.static(clientDistPath));
+
+app.get("*", (_request, response) => {
+  response.sendFile(path.join(clientDistPath, "index.html"));
 });
 
 app.use((error: unknown, _request: Request, response: Response, _next: NextFunction) => {
